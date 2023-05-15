@@ -38,12 +38,12 @@ SELECT
 	location, 
 	date, 
 	population,
-	CONVERT(int, max(total_cases)) as highest_rate, 
-	CONVERT(int, (max(CONVERT(int, total_cases)/CONVERT(int, population))))*100 as percent_population_withcovid
+	MAX(CONVERT(int, total_cases)) as highest_rate, 
+	(MAX(CONVERT(int, total_cases))/population)*100 as percent_population_withcovid
 	FROM PortProject..coviddeath
 	WHERE continent is not null
 	group by location, population, date
-	ORDER BY 1,2
+	ORDER BY 1,2, percent_population_withcovid
 
 
 
