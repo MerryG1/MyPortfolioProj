@@ -12,28 +12,29 @@ ORDER BY 3, 4
 SELECT 
 	location, 
 	date, 
-	total_cases, 
-	new_cases, 
-	total_deaths, 
+	isnull(total_cases,0) as total_cases, 
+	isnull(new_cases,0) as new_cases, 
+	isnull(total_deaths,0) as total_deaths, 
 	population
 	FROM PortProject..coviddeath
 	WHERE location is not null
 	ORDER BY 1,2
 
---we looke at SUM death count per location, date and continent
+--we look at SUM death count against population per location, date and continent
 --note that total cases and total deaths also have null characters in them, therefore you must first cast them into into INT
 SELECT 
 	location, 
 	date, 
-	continent,
-	SUM(CAST(total_deaths as int)) as TotalDeathCount
+	continent,population,
+	SUM(CAST(total_deaths as int)) as TotalDeathCount,
+	(MAX(CONVERT(int, total_deaths))/population)*100 as percent_population_death
 	FROM PortProject..coviddeath
 	WHERE continent is not null
-	GROUP BY location, date, continent
+	GROUP BY location, date, continent, population
 	ORDER BY TotalDeathCount desc
 
 
---Now let us look at total cases against the total deaths
+--Now let us look at max cases against the population
 SELECT 
 	location, 
 	date, 
@@ -43,7 +44,7 @@ SELECT
 	FROM PortProject..coviddeath
 	WHERE continent is not null
 	group by location, population, date
-	ORDER BY 1,2, percent_population_withcovid
+	ORDER BY percent_population_withcovid
 
 
 
