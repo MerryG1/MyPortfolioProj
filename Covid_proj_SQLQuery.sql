@@ -56,6 +56,7 @@ SELECT
 
 --time to look at the  global values in terms of new deaths per million and the accumulation of new cases
 --for this we need a temporary table, we look at two methods of creating this
+--First method is using a CTE, it is a quicker method and runs faster
 With tempi_tab(continent, location, date, population, new_cases, new_deaths, new_deaths_per_million, cummulative_newcases)
 
 as
@@ -69,6 +70,7 @@ SELECT continent, location, date, population, new_cases, new_deaths, new_deaths_
 
 SELECT *, (cummulative_newcases/population) *100 as percentageNewCasesInPopu
 FROM tempi_tab
+ORDER BY percentageNewCasesInPopu
 
 --Another option from using CTE is to create a table 
 
@@ -93,6 +95,7 @@ INSERT INTO PercentageNewCase
 SELECT
 	*, (cummulative_newcases/population) *100 as percentageNewCasesInPopu
 FROM PercentageNewCase
+ORDER BY percentageNewCasesInPopu
 
 --Taking a look at MAX total deaths per million and total death counts across all continent
 --run both queries together to view both information
